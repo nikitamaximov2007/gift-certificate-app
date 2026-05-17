@@ -161,8 +161,11 @@ class CertificatePainter extends CustomPainter {
 
     final double y1 = H * 0.150; // baseline of "ПОДАРОЧНЫЙ"
     final tp1 = _centered(canvas, 'ПОДАРОЧНЫЙ', y1, smallStyle, W);
-    // Qt advances: y += QFM.height() + fh(0.020) — QFM.height() ≈ tp1.height
-    final double y2 = y1 + tp1.height + H * 0.020;
+    // Qt: y += QFM.height() + fh(0.020).
+    // On Windows QFM.height() includes leading and is ~15-20% larger than
+    // fontSize, so the effective advance is H*0.048*1.18 + H*0.020 ≈ H*0.077.
+    // We replicate that with tp1.height + H*0.058 to produce the same visual gap.
+    final double y2 = y1 + tp1.height + H * 0.058;
     _centered(canvas, 'СЕРТИФИКАТ', y2, bigStyle, W);
   }
 
@@ -259,13 +262,11 @@ class CertificatePainter extends CustomPainter {
     );
 
     // ₽ (U+20BD) is absent from PlayfairDisplay-Regular.
-    // We keep PlayfairDisplay as primary so Flutter's glyph-fallback engine
-    // only substitutes for that single missing glyph. NotoSerif is bundled
-    // with Android 7+ and provides a serif ₽ that visually matches Playfair.
-    // 'Georgia' and 'serif' serve as further fallbacks for iOS/other platforms.
+    // fontFamilyFallback is unreliable for TextPainter on Android canvas —
+    // the engine may not trigger glyph substitution at all, producing □.
+    // Safest fix: omit fontFamily entirely so the platform picks its default
+    // (Roboto on Android, SF Pro on iOS) — both contain ₽ natively.
     final currencyStyle = TextStyle(
-      fontFamily: 'PlayfairDisplay',
-      fontFamilyFallback: const ['NotoSerif', 'Georgia', 'serif'],
       fontSize: H * 0.072,
       color: const Color(0xFF2B1F17),
       height: 1.0,
