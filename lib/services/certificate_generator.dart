@@ -17,9 +17,15 @@ Future<ui.Image> loadUiImage(String assetPath) async {
 }
 
 // ---------------------------------------------------------------------------
-// The core painter — used both in the live preview CustomPaint widget
-// and by the export path via PictureRecorder.
-// Coordinate system: proportional to canvas W and H (top-based Y).
+// CertificatePainter
+//
+// COORDINATE SYSTEM: all Y values are BASELINES, matching the Qt/C++ desktop
+// renderer (QPainter::drawText with a QPoint draws at the alphabetic baseline).
+//
+// Font sizes are expressed as fractions of the canvas height H, identical to
+// the desktop's  fh(x) = int(H * x).
+//
+// All numeric constants were ported directly from CertificateGenerator.cpp.
 // ---------------------------------------------------------------------------
 class CertificatePainter extends CustomPainter {
   final String clientName;
@@ -38,7 +44,6 @@ class CertificatePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final W = size.width;
     final H = size.height;
-
     _drawBackground(canvas, W, H);
     _drawTitle(canvas, W, H);
     _drawCentralBlock(canvas, W, H);
@@ -48,60 +53,71 @@ class CertificatePainter extends CustomPainter {
     _drawValidityNote(canvas, W, H);
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
+  // ── Low-level paint utilities ──────────────────────────────────────────────
 
-  static Paint _linePaint(Color color, double width) =>
-      Paint()..color = color..strokeWidth = width..style = PaintingStyle.stroke;
+  static Paint _stroke(Color c, double w) =>
+      Paint()..color = c..strokeWidth = w..style = PaintingStyle.stroke;
 
-  static Paint _fillPaint(Color color) =>
-      Paint()..color = color..style = PaintingStyle.fill;
+  static Paint _fill(Color c) =>
+      Paint()..color = c..style = PaintingStyle.fill;
 
-  // Draw horizontally-centered text at top-Y [y].
-  // Returns the painter so callers can query .height.
+  /// Lay out [text] and return (painter, alphabeticBaseline).
+  /// The baseline is the distance from the top-left of the painter box to
+  /// the alphabetic baseline, matching QFontMetrics::ascent().
+  (TextPainter, double) _layout(String text, TextStyle style,
+      {double? minW, double? maxW}) {
+    final tp = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: ui.TextDirection.ltr,
+      textAlign: minW != null ? TextAlign.center : TextAlign.left,
+    )..layout(
+        minWidth: minW ?? 0,
+        maxWidth: maxW ?? double.infinity,
+      );
+    final asc = tp.computeDistanceToActualBaseline(TextBaseline.alphabetic) ??
+        (style.fontSize ?? 16) * 0.8;
+    return (tp, asc);
+  }
+
+  /// Draw [text] horizontally centred on the canvas, BASELINE at [baselineY].
+  /// Mirrors Qt: drawCenteredText(painter, text, font, cx, baselineY, color)
+  /// Returns the TextPainter for metric queries (height, width).
   TextPainter _centered(
-    Canvas canvas,
-    String text,
-    double y,
-    TextStyle style,
-    double maxWidth,
-  ) {
-    final tp = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: ui.TextDirection.ltr,
-      textAlign: TextAlign.center,
-    // minWidth == maxWidth forces the painter box to fill the full canvas
-    // width so textAlign:center actually centres each line correctly.
-    )..layout(minWidth: maxWidth, maxWidth: maxWidth);
-    tp.paint(canvas, Offset(0, y));
+      Canvas canvas, String text, double baselineY, TextStyle style, double W) {
+    final (tp, asc) = _layout(text, style, minW: W, maxW: W);
+    tp.paint(canvas, Offset(0, baselineY - asc));
     return tp;
   }
 
-  // Draw text centered around cx (not left-aligned).
-  TextPainter _atX(
-    Canvas canvas,
-    String text,
-    double cx,
-    double y,
-    TextStyle style,
-  ) {
-    final tp = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: ui.TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, Offset(cx - tp.width / 2, y));
+  /// Draw [text] centred around [cx], BASELINE at [baselineY].
+  /// Mirrors Qt: drawCenteredText(painter, text, font, cx, baselineY, color)
+  TextPainter _centeredAtX(Canvas canvas, String text, double cx,
+      double baselineY, TextStyle style) {
+    final (tp, asc) = _layout(text, style);
+    tp.paint(canvas, Offset(cx - tp.width / 2, baselineY - asc));
     return tp;
   }
 
-  void _decorRule(Canvas canvas, double cx, double y, double halfLen, Color color, double strokeW) {
-    const double gap = 0.012; // fraction of halfLen used as gap ratio — kept proportional
-    final gapPx = halfLen * 0.04 + strokeW * 6;
-    final paint = _linePaint(color, strokeW);
-    canvas.drawLine(Offset(cx - halfLen, y), Offset(cx - gapPx, y), paint);
-    canvas.drawLine(Offset(cx + gapPx, y), Offset(cx + halfLen, y), paint);
-    canvas.drawCircle(Offset(cx, y), strokeW * 3.5, _fillPaint(color));
+  /// Draw [text] left-aligned at [x], BASELINE at [baselineY].
+  /// Mirrors Qt: painter.drawText(x, cy, text)
+  TextPainter _leftAt(Canvas canvas, String text, double x, double baselineY,
+      TextStyle style) {
+    final (tp, asc) = _layout(text, style);
+    tp.paint(canvas, Offset(x, baselineY - asc));
+    return tp;
   }
 
-  // ── Background ────────────────────────────────────────────────────────────
+  /// Decorative horizontal rule with centre dot — matches drawDecorRule().
+  void _decorRule(Canvas canvas, double cx, double y, double halfLen,
+      Color color, double strokeW) {
+    final gap = halfLen * 0.04 + strokeW * 6;
+    final p = _stroke(color, strokeW);
+    canvas.drawLine(Offset(cx - halfLen, y), Offset(cx - gap, y), p);
+    canvas.drawLine(Offset(cx + gap, y), Offset(cx + halfLen, y), p);
+    canvas.drawCircle(Offset(cx, y), strokeW * 3.5, _fill(color));
+  }
+
+  // ── Background ─────────────────────────────────────────────────────────────
 
   void _drawBackground(Canvas canvas, double W, double H) {
     if (backgroundImage != null) {
@@ -113,14 +129,17 @@ class CertificatePainter extends CustomPainter {
       );
     } else {
       canvas.drawRect(
-        Rect.fromLTWH(0, 0, W, H),
-        _fillPaint(const Color(0xFFF3EEE5)),
-      );
+          Rect.fromLTWH(0, 0, W, H), _fill(const Color(0xFFF3EEE5)));
     }
   }
 
-  // ── Title ─────────────────────────────────────────────────────────────────
-  // "ПОДАРОЧНЫЙ" (small Playfair) then "СЕРТИФИКАТ" (large Playfair)
+  // ── Title ──────────────────────────────────────────────────────────────────
+  //
+  // Qt source:
+  //   int y = fh(0.150);
+  //   drawCenteredText(..., "ПОДАРОЧНЫЙ", titleSmall, cx, y, ...);
+  //   y += QFontMetrics(titleSmall).height() + fh(0.020);
+  //   drawCenteredText(..., "СЕРТИФИКАТ", titleBig,   cx, y, ...);
 
   void _drawTitle(Canvas canvas, double W, double H) {
     const darkText = Color(0xFF2F2118);
@@ -140,12 +159,24 @@ class CertificatePainter extends CustomPainter {
       height: 1.0,
     );
 
-    final tp1 = _centered(canvas, 'ПОДАРОЧНЫЙ', H * 0.108, smallStyle, W);
-    _centered(canvas, 'СЕРТИФИКАТ', H * 0.108 + tp1.height + H * 0.018, bigStyle, W);
+    final double y1 = H * 0.150; // baseline of "ПОДАРОЧНЫЙ"
+    final tp1 = _centered(canvas, 'ПОДАРОЧНЫЙ', y1, smallStyle, W);
+    // Qt advances: y += QFM.height() + fh(0.020) — QFM.height() ≈ tp1.height
+    final double y2 = y1 + tp1.height + H * 0.020;
+    _centered(canvas, 'СЕРТИФИКАТ', y2, bigStyle, W);
   }
 
-  // ── Central block ─────────────────────────────────────────────────────────
-  // Decor rule → subtitle → client name → underline
+  // ── Central block ──────────────────────────────────────────────────────────
+  //
+  // Qt source:
+  //   centerZoneTop = fh(0.360); centralLift = fh(0.010);
+  //   dividerYBase  = centerZoneTop - fh(0.012)  → fh(0.348)
+  //   dividerY      = dividerYBase  - centralLift → fh(0.338)
+  //   subtitleYBase = dividerYBase  + fh(0.052)  → fh(0.400)
+  //   subtitleY     = subtitleYBase - centralLift → fh(0.390)  [baseline]
+  //   nameY         = subtitleYBase + QFM(subtitle).height() + fh(0.040)
+  //                 = fh(0.400) + fh(0.027) + fh(0.040)      [baseline]
+  //   nameLineY     = nameY + scriptFm.descent() + fh(0.028) - centralLift
 
   void _drawCentralBlock(Canvas canvas, double W, double H) {
     const darkText = Color(0xFF2F2118);
@@ -168,24 +199,43 @@ class CertificatePainter extends CustomPainter {
       height: 1.0,
     );
 
-    final double ruleY = H * 0.336;
-    _decorRule(canvas, W / 2, ruleY, W * 0.21, accent, H * 0.002);
+    _decorRule(canvas, W / 2, H * 0.338, W * 0.21, accent, H * 0.002);
 
-    final double subtitleY = H * 0.388;
-    final tpSub = _centered(canvas, 'НАСТОЯЩИЙ СЕРТИФИКАТ ВЫДАН', subtitleY, subtitleStyle, W);
+    // subtitle baseline = fh(0.390)
+    final tpSub =
+        _centered(canvas, 'НАСТОЯЩИЙ СЕРТИФИКАТ ВЫДАН', H * 0.390, subtitleStyle, W);
 
-    final double nameY = subtitleY + tpSub.height + H * 0.038;
-    final tpName = _centered(canvas, clientName.isEmpty ? 'Имя клиента' : clientName, nameY, scriptStyle, W);
+    // name baseline = fh(0.400) + subtitle.height + fh(0.040)
+    final double nameBaseline = H * 0.400 + tpSub.height + H * 0.040;
+    final tpName = _centered(
+      canvas,
+      clientName.isEmpty ? 'Имя клиента' : clientName,
+      nameBaseline,
+      scriptStyle,
+      W,
+    );
 
-    final double underlineY = nameY + tpName.height + H * 0.018;
+    // underline: nameBaseline + descent + fh(0.028) - centralLift(0.010)
+    final (_, nameAsc) = _layout(
+      clientName.isEmpty ? 'Имя клиента' : clientName,
+      scriptStyle,
+    );
+    final nameDesc = tpName.height - nameAsc;
+    final double lineY = nameBaseline + nameDesc + H * 0.028 - H * 0.010;
     canvas.drawLine(
-      Offset(W / 2 - W * 0.19, underlineY),
-      Offset(W / 2 + W * 0.19, underlineY),
-      _linePaint(lineColor, H * 0.0009),
+      Offset(W / 2 - W * 0.19, lineY),
+      Offset(W / 2 + W * 0.19, lineY),
+      _stroke(lineColor, H * 0.0009),
     );
   }
 
-  // ── Amount block ──────────────────────────────────────────────────────────
+  // ── Amount block ───────────────────────────────────────────────────────────
+  //
+  // Qt source:
+  //   yAmountLabel = fh(0.615)                               [baseline]
+  //   yAmountValue = yAmountLabel + QFM(label).height() + fh(0.038)  [baseline]
+  //   amountGap    = fw(0.010)
+  //   line at yAmountValue + fh(0.048)
 
   void _drawAmountBlock(Canvas canvas, double W, double H) {
     const darkText = Color(0xFF2F2118);
@@ -207,45 +257,53 @@ class CertificatePainter extends CustomPainter {
       letterSpacing: H * 0.078 * 0.03,
       height: 1.0,
     );
+
+    // ₽ (U+20BD) is absent from PlayfairDisplay-Regular.
+    // We keep PlayfairDisplay as primary so Flutter's glyph-fallback engine
+    // only substitutes for that single missing glyph. NotoSerif is bundled
+    // with Android 7+ and provides a serif ₽ that visually matches Playfair.
+    // 'Georgia' and 'serif' serve as further fallbacks for iOS/other platforms.
     final currencyStyle = TextStyle(
       fontFamily: 'PlayfairDisplay',
-      // Fallback chain so ₽ (U+20BD) is resolved by a system font when
-      // PlayfairDisplay does not contain the glyph.
-      fontFamilyFallback: const ['Roboto', 'NotoSans', 'sans-serif'],
+      fontFamilyFallback: const ['NotoSerif', 'Georgia', 'serif'],
       fontSize: H * 0.072,
       color: const Color(0xFF2B1F17),
       height: 1.0,
     );
 
-    final double labelY = H * 0.612;
-    final tpLabel = _centered(canvas, 'НА СУММУ', labelY, labelStyle, W);
+    final double labelBaseline = H * 0.615;
+    final tpLabel = _centered(canvas, 'НА СУММУ', labelBaseline, labelStyle, W);
 
-    final double valueY = labelY + tpLabel.height + H * 0.036;
+    final double amtBaseline = labelBaseline + tpLabel.height + H * 0.038;
 
     final display = amountText.isEmpty ? '0' : amountText;
-    final tpAmount = TextPainter(
-      text: TextSpan(text: display, style: amountStyle),
-      textDirection: ui.TextDirection.ltr,
-    )..layout();
-    final tpCurrency = TextPainter(
-      text: TextSpan(text: ' ₽', style: currencyStyle),
-      textDirection: ui.TextDirection.ltr,
-    )..layout();
 
-    final totalW = tpAmount.width + tpCurrency.width;
-    final startX = (W - totalW) / 2;
-    tpAmount.paint(canvas, Offset(startX, valueY));
-    tpCurrency.paint(canvas, Offset(startX + tpAmount.width, valueY + H * 0.006));
+    // Measure number and ruble symbol to compute the combined centred position.
+    final (tpNum, numAsc) = _layout(display, amountStyle);
+    final (tpRub, rubAsc) = _layout('₽', currencyStyle);
 
+    // amountGap = fw(0.010) — extra kerning gap between number and symbol
+    final double gap = W * 0.010;
+    final double totalW = tpNum.width + gap + tpRub.width;
+    final double startX = (W - totalW) / 2;
+
+    tpNum.paint(canvas, Offset(startX, amtBaseline - numAsc));
+    tpRub.paint(canvas, Offset(startX + tpNum.width + gap, amtBaseline - rubAsc));
+
+    // decorative line fh(0.048) below the amount baseline
     canvas.drawLine(
-      Offset(W / 2 - W * 0.11, valueY + H * 0.094),
-      Offset(W / 2 + W * 0.11, valueY + H * 0.094),
-      _linePaint(lineColor, H * 0.0009),
+      Offset(W / 2 - W * 0.11, amtBaseline + H * 0.048),
+      Offset(W / 2 + W * 0.11, amtBaseline + H * 0.048),
+      _stroke(lineColor, H * 0.0009),
     );
   }
 
-  // ── Footer ────────────────────────────────────────────────────────────────
-  // Signature (left), date (right), validity note
+  // ── Footer ─────────────────────────────────────────────────────────────────
+  //
+  // Qt source:
+  //   footerTop = fh(0.845)                       [baseline for signature]
+  //   line at footerTop + fh(0.015)
+  //   role/date baselines at footerTop + fh(0.052)
 
   void _drawFooter(Canvas canvas, double W, double H) {
     const darkText = Color(0xFF4A3A2B);
@@ -272,30 +330,38 @@ class CertificatePainter extends CustomPainter {
       height: 1.0,
     );
 
-    final double fTop = H * 0.842;
+    final double ft = H * 0.845; // footerTop baseline
     final double lx = W * 0.33;
     final double rx = W * 0.67;
 
-    // Left: signature
-    _atX(canvas, 'Екатерина Максимова', lx, fTop, signStyle);
+    // Left column: signature → rule → role label
+    _centeredAtX(canvas, 'Екатерина Максимова', lx, ft, signStyle);
     canvas.drawLine(
-      Offset(W * 0.24, fTop + H * 0.042),
-      Offset(W * 0.42, fTop + H * 0.042),
-      _linePaint(lineColor, H * 0.0009),
+      Offset(W * 0.24, ft + H * 0.015),
+      Offset(W * 0.42, ft + H * 0.015),
+      _stroke(lineColor, H * 0.0009),
     );
-    _atX(canvas, 'МАСТЕР', lx, fTop + H * 0.052, roleStyle);
+    _centeredAtX(canvas, 'МАСТЕР', lx, ft + H * 0.052, roleStyle);
 
-    // Right: date
-    _atX(canvas, 'ДАТА ВЫДАЧИ', rx, fTop, roleStyle);
+    // Right column: date label → rule → date value
+    _centeredAtX(canvas, 'ДАТА ВЫДАЧИ', rx, ft, roleStyle);
     canvas.drawLine(
-      Offset(W * 0.58, fTop + H * 0.042),
-      Offset(W * 0.76, fTop + H * 0.042),
-      _linePaint(lineColor, H * 0.0009),
+      Offset(W * 0.58, ft + H * 0.015),
+      Offset(W * 0.76, ft + H * 0.015),
+      _stroke(lineColor, H * 0.0009),
     );
-    _atX(canvas, DateFormat('dd.MM.yyyy').format(DateTime.now()), rx, fTop + H * 0.052, dateStyle);
+    _centeredAtX(canvas, DateFormat('dd.MM.yyyy').format(DateTime.now()), rx,
+        ft + H * 0.052, dateStyle);
   }
 
-  // ── Contact / QR block ────────────────────────────────────────────────────
+  // ── Contact / QR block ─────────────────────────────────────────────────────
+  //
+  // Qt source:
+  //   qrRect  = QRect(fw(0.88), fh(0.79), qrSize, qrSize)
+  //   contactX = qrRect.center().x() - fw(0.10)   [left edge of text block]
+  //   cy       = qrRect.y() - fh(0.160)            [first line baseline]
+  //   advance  = QFM.height() + gap (title: +fh(0.003), body: +fh(0.006))
+  //   VK link  = qrRect.bottom() + fh(0.040)       [baseline]
 
   void _drawContactBlock(Canvas canvas, double W, double H) {
     const darkText = Color(0xFF2F241C);
@@ -329,52 +395,43 @@ class CertificatePainter extends CustomPainter {
     // QR background
     canvas.drawRRect(
       RRect.fromRectAndRadius(qrRect.inflate(H * 0.004), const Radius.circular(10)),
-      _fillPaint(const Color(0xDDFFFFFF)),
+      _fill(const Color(0xDDFFFFFF)),
     );
 
     if (qrImage != null) {
       paintImage(canvas: canvas, rect: qrRect, image: qrImage!, fit: BoxFit.fill);
     } else {
-      final tp = TextPainter(
-        text: TextSpan(text: 'VK\nQR', style: titleStyle.copyWith(fontSize: H * 0.016)),
-        textDirection: ui.TextDirection.ltr,
-        textAlign: TextAlign.center,
-      )..layout(maxWidth: qrSize);
-      tp.paint(canvas, Offset(qrX + (qrSize - tp.width) / 2, qrY + (qrSize - tp.height) / 2));
+      final (tp, _) = _layout('VK\nQR', titleStyle.copyWith(fontSize: H * 0.016),
+          maxW: qrSize);
+      tp.paint(canvas,
+          Offset(qrX + (qrSize - tp.width) / 2, qrY + (qrSize - tp.height) / 2));
     }
 
-    _atX(canvas, 'vk.com/permtatuazh', qrX + qrSize / 2, qrY + qrSize + H * 0.018, vkStyle);
+    // VK link — baseline at qrRect.bottom() + fh(0.040)
+    _centeredAtX(
+        canvas, 'vk.com/permtatuazh', qrRect.center.dx, qrRect.bottom + H * 0.040, vkStyle);
 
-    // Contact lines
-    final double cx = qrX + qrSize / 2;
-    final double startY = qrY - H * 0.160;
-    double cy = startY;
+    // Contact lines — contactX = qrRect.center.x - fw(0.10)
+    final double contactX = qrRect.center.dx - W * 0.10;
+    double cy = qrY - H * 0.160; // first baseline
 
-    final lines = <MapEntry<String?, String>>[
-      MapEntry('Адрес:', 'Докучаева 50Б, офис 210'),
-      MapEntry('Мастер:', 'Екатерина Максимова'),
-      MapEntry('Телефон:', '89091011771'),
+    const entries = [
+      ('Адрес:', 'Докучаева 50Б, офис 210'),
+      ('Мастер:', 'Екатерина Максимова'),
+      ('Телефон:', '89091011771'),
     ];
 
-    for (final entry in lines) {
-      if (entry.key != null) {
-        final tp = TextPainter(
-          text: TextSpan(text: entry.key, style: titleStyle),
-          textDirection: ui.TextDirection.ltr,
-        )..layout();
-        tp.paint(canvas, Offset(cx - W * 0.10, cy));
-        cy += tp.height + H * 0.003;
-      }
-      final tp = TextPainter(
-        text: TextSpan(text: entry.value, style: bodyStyle),
-        textDirection: ui.TextDirection.ltr,
-      )..layout();
-      tp.paint(canvas, Offset(cx - W * 0.10, cy));
-      cy += tp.height + H * 0.009;
+    for (final (label, value) in entries) {
+      _leftAt(canvas, label, contactX, cy, titleStyle);
+      cy += titleStyle.fontSize! + H * 0.003; // QFM.height() ≈ fontSize (height:1.0)
+      _leftAt(canvas, value, contactX, cy, bodyStyle);
+      cy += bodyStyle.fontSize! + H * 0.006;
     }
   }
 
-  // ── Validity note ─────────────────────────────────────────────────────────
+  // ── Validity note ──────────────────────────────────────────────────────────
+  //
+  // Qt: bottomRuleY = fh(0.935); text baseline = fh(0.935) + fh(0.034)
 
   void _drawValidityNote(Canvas canvas, double W, double H) {
     final style = TextStyle(
@@ -383,7 +440,8 @@ class CertificatePainter extends CustomPainter {
       color: const Color(0xFF3B2F25),
       height: 1.0,
     );
-    _centered(canvas, 'Сертификат действителен в течение 6 месяцев', H * 0.956, style, W);
+    _centered(canvas, 'Сертификат действителен в течение 6 месяцев',
+        H * 0.935 + H * 0.034, style, W);
   }
 
   @override
