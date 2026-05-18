@@ -212,7 +212,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                 hintText: 'Полное имя клиента',
                 prefixIcon: Icon(Icons.person_outline, color: Color(0xFFC8A97E)),
               ),
-              style: const TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+              style: const TextStyle(fontFamily: 'Montserrat', fontSize: 15, letterSpacing: 1.2),
               onChanged: (_) => setState(() {}),
               validator: (v) => (v == null || v.trim().isEmpty) ? 'Введите имя клиента' : null,
             ),
@@ -222,14 +222,20 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
             TextFormField(
               controller: _amountCtrl,
               keyboardType: const TextInputType.numberWithOptions(decimal: false),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: '0',
-                prefixIcon: Icon(Icons.payments_outlined, color: Color(0xFFC8A97E)),
-                suffixText: '₽',
-                suffixStyle: TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 18,
-                  color: Color(0xFFC8A97E),
+                prefixIcon: const Icon(Icons.payments_outlined, color: Color(0xFFC8A97E)),
+                suffixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                suffixIcon: Align(
+                  widthFactor: 1.0,
+                  heightFactor: 1.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 14),
+                    child: Text(
+                      '₽',
+                      style: const TextStyle(fontSize: 18, color: Color(0xFFC8A97E)),
+                    ),
+                  ),
                 ),
               ),
               style: const TextStyle(fontFamily: 'Montserrat', fontSize: 15),
