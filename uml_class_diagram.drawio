@@ -1,0 +1,342 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram id="gift-cert-uml" name="UML Class Diagram">
+    <mxGraphModel dx="2056" dy="1238" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="GiftCertApp" vertex="1">
+          <mxGeometry height="70" width="200" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="2" style="line;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="" vertex="1">
+          <mxGeometry height="8" width="200" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="2" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="200" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="RootScreen" vertex="1">
+          <mxGeometry height="110" width="260" x="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _currentIndex: int" vertex="1">
+          <mxGeometry height="22" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _screens: List&lt;Widget&gt;" vertex="1">
+          <mxGeometry height="22" width="260" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="10" style="line;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="" vertex="1">
+          <mxGeometry height="8" width="260" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="260" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;" value="GeneratorScreen" vertex="1">
+          <mxGeometry height="285" width="280" x="30" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="21" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _nameCtrl: TextEditingController" vertex="1">
+          <mxGeometry height="22" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _amountCtrl: TextEditingController" vertex="1">
+          <mxGeometry height="22" width="280" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="23" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _season: String" vertex="1">
+          <mxGeometry height="22" width="280" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="24" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _bgImage: ui.Image?" vertex="1">
+          <mxGeometry height="22" width="280" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="25" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _isGenerating: bool" vertex="1">
+          <mxGeometry height="22" width="280" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="26" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _outputPath: String?" vertex="1">
+          <mxGeometry height="22" width="280" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="27" parent="20" style="line;fillColor=#d5e8d4;strokeColor=#82b366;" value="" vertex="1">
+          <mxGeometry height="8" width="280" y="162" as="geometry" />
+        </mxCell>
+        <mxCell id="28" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _loadImages(season: String)" vertex="1">
+          <mxGeometry height="22" width="280" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="29" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _createCertificate()" vertex="1">
+          <mxGeometry height="22" width="280" y="192" as="geometry" />
+        </mxCell>
+        <mxCell id="30" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _saveToGallery()" vertex="1">
+          <mxGeometry height="22" width="280" y="214" as="geometry" />
+        </mxCell>
+        <mxCell id="31" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _shareCertificate()" vertex="1">
+          <mxGeometry height="22" width="280" y="236" as="geometry" />
+        </mxCell>
+        <mxCell id="32" parent="20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="280" y="258" as="geometry" />
+        </mxCell>
+        <mxCell id="40" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;" value="HistoryScreen" vertex="1">
+          <mxGeometry height="195" width="270" x="340" y="220" as="geometry">
+            <mxRectangle height="30" width="120" x="340" y="220" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _records: List&lt;CertificateRecord&gt;" vertex="1">
+          <mxGeometry height="22" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="42" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _loading: bool" vertex="1">
+          <mxGeometry height="22" width="270" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="43" parent="40" style="line;fillColor=#d5e8d4;strokeColor=#82b366;" value="" vertex="1">
+          <mxGeometry height="8" width="270" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="44" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _load()" vertex="1">
+          <mxGeometry height="22" width="270" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="45" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _confirmDelete(record)" vertex="1">
+          <mxGeometry height="22" width="270" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="46" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _openPreview(record)" vertex="1">
+          <mxGeometry height="22" width="270" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="47" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _buildCard(record): Widget" vertex="1">
+          <mxGeometry height="22" width="270" y="148" as="geometry" />
+        </mxCell>
+        <mxCell id="48" parent="40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="270" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="50" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;" value="_PreviewPage" vertex="1">
+          <mxGeometry height="138" width="260" x="670" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="51" parent="50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ record: CertificateRecord" vertex="1">
+          <mxGeometry height="22" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="52" parent="50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ file: File" vertex="1">
+          <mxGeometry height="22" width="260" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="53" parent="50" style="line;fillColor=#d5e8d4;strokeColor=#82b366;" value="" vertex="1">
+          <mxGeometry height="8" width="260" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="54" parent="50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="260" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="55" parent="50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _info(label, value): Widget" vertex="1">
+          <mxGeometry height="22" width="260" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="100" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;" value="CertificateRecord" vertex="1">
+          <mxGeometry height="270" width="280" x="980" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="101" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ id: int?" vertex="1">
+          <mxGeometry height="22" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="102" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ fullName: String" vertex="1">
+          <mxGeometry height="22" width="280" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="103" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ amount: double" vertex="1">
+          <mxGeometry height="22" width="280" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="104" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ season: String" vertex="1">
+          <mxGeometry height="22" width="280" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="105" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ createdAt: String" vertex="1">
+          <mxGeometry height="22" width="280" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="106" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ filePath: String" vertex="1">
+          <mxGeometry height="22" width="280" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="107" parent="100" style="line;fillColor=#e1d5e7;strokeColor=#9673a6;" value="" vertex="1">
+          <mxGeometry height="8" width="280" y="162" as="geometry" />
+        </mxCell>
+        <mxCell id="108" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="«factory» fromMap(map): CertificateRecord" vertex="1">
+          <mxGeometry height="22" width="280" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="109" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ toMap(): Map&lt;String, dynamic&gt;" vertex="1">
+          <mxGeometry height="22" width="280" y="192" as="geometry" />
+        </mxCell>
+        <mxCell id="110" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="«get» seasonLabel: String" vertex="1">
+          <mxGeometry height="22" width="280" y="214" as="geometry" />
+        </mxCell>
+        <mxCell id="111" parent="100" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="«get» amountFormatted: String" vertex="1">
+          <mxGeometry height="22" width="280" y="236" as="geometry" />
+        </mxCell>
+        <mxCell id="60" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d6b656;" value="CertificatePainter" vertex="1">
+          <mxGeometry height="280" width="280" x="30" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="61" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ clientName: String" vertex="1">
+          <mxGeometry height="22" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="62" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ amountText: String" vertex="1">
+          <mxGeometry height="22" width="280" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="63" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ backgroundImage: ui.Image?" vertex="1">
+          <mxGeometry height="22" width="280" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="64" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ qrImage: ui.Image?" vertex="1">
+          <mxGeometry height="22" width="280" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="65" parent="60" style="line;fillColor=#ffe6cc;strokeColor=#d6b656;" value="" vertex="1">
+          <mxGeometry height="8" width="280" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="66" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ paint(canvas, size)" vertex="1">
+          <mxGeometry height="22" width="280" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="67" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _drawBackground()" vertex="1">
+          <mxGeometry height="22" width="280" y="148" as="geometry" />
+        </mxCell>
+        <mxCell id="68" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _drawTitle()" vertex="1">
+          <mxGeometry height="22" width="280" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="69" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _drawCentralBlock()" vertex="1">
+          <mxGeometry height="22" width="280" y="192" as="geometry" />
+        </mxCell>
+        <mxCell id="70" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _drawAmountBlock()" vertex="1">
+          <mxGeometry height="22" width="280" y="214" as="geometry" />
+        </mxCell>
+        <mxCell id="71" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _drawFooter()" vertex="1">
+          <mxGeometry height="22" width="280" y="236" as="geometry" />
+        </mxCell>
+        <mxCell id="72" parent="60" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _drawContactBlock()" vertex="1">
+          <mxGeometry height="22" width="280" y="258" as="geometry" />
+        </mxCell>
+        <mxCell id="80" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d6b656;" value="CertificateGenerator" vertex="1">
+          <mxGeometry height="92" width="280" x="340" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="81" parent="80" style="line;fillColor=#ffe6cc;strokeColor=#d6b656;" value="" vertex="1">
+          <mxGeometry height="8" width="280" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="82" parent="80" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="«static» generate(...): Future&lt;Uint8List&gt;" vertex="1">
+          <mxGeometry height="22" width="280" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="83" parent="80" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="«static» saveToAppDir(...): Future&lt;String&gt;" vertex="1">
+          <mxGeometry height="22" width="280" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="90" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d6b656;" value="DatabaseService" vertex="1">
+          <mxGeometry height="195" width="270" x="650" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="91" parent="90" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="«static» instance: DatabaseService" vertex="1">
+          <mxGeometry height="22" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="92" parent="90" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- _db: Database?" vertex="1">
+          <mxGeometry height="22" width="270" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="93" parent="90" style="line;fillColor=#ffe6cc;strokeColor=#d6b656;" value="" vertex="1">
+          <mxGeometry height="8" width="270" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="94" parent="90" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ init(): Future&lt;void&gt;" vertex="1">
+          <mxGeometry height="22" width="270" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="95" parent="90" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ addRecord(r): Future&lt;int&gt;" vertex="1">
+          <mxGeometry height="22" width="270" y="104" as="geometry" />
+        </mxCell>
+        <mxCell id="96" parent="90" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ fetchAll(): Future&lt;List&lt;CertificateRecord&gt;&gt;" vertex="1">
+          <mxGeometry height="22" width="270" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="97" parent="90" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ deleteRecord(id): Future&lt;void&gt;" vertex="1">
+          <mxGeometry height="22" width="270" y="148" as="geometry" />
+        </mxCell>
+        <mxCell id="120" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;" value="SeasonSelector" vertex="1">
+          <mxGeometry height="110" width="250" x="950" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="121" parent="120" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ selected: String" vertex="1">
+          <mxGeometry height="22" width="250" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="122" parent="120" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ onChanged: ValueChanged&lt;String&gt;" vertex="1">
+          <mxGeometry height="22" width="250" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="123" parent="120" style="line;fillColor=#f8cecc;strokeColor=#b85450;" value="" vertex="1">
+          <mxGeometry height="8" width="250" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="124" parent="120" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="250" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="130" parent="1" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;" value="_SeasonChip" vertex="1">
+          <mxGeometry height="178" width="250" x="1300" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="131" parent="130" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- value: String" vertex="1">
+          <mxGeometry height="22" width="250" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="132" parent="130" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- label: String" vertex="1">
+          <mxGeometry height="22" width="250" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="133" parent="130" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- emoji: String" vertex="1">
+          <mxGeometry height="22" width="250" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="134" parent="130" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- isSelected: bool" vertex="1">
+          <mxGeometry height="22" width="250" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="135" parent="130" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="- onTap: VoidCallback" vertex="1">
+          <mxGeometry height="22" width="250" y="118" as="geometry" />
+        </mxCell>
+        <mxCell id="136" parent="130" style="line;fillColor=#f8cecc;strokeColor=#b85450;" value="" vertex="1">
+          <mxGeometry height="8" width="250" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="137" parent="130" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;" value="+ build(): Widget" vertex="1">
+          <mxGeometry height="22" width="250" y="148" as="geometry" />
+        </mxCell>
+        <mxCell id="200" edge="1" parent="1" source="2" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="10" value="создаёт">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="201" edge="1" parent="1" source="10" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="20" value="содержит">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="202" edge="1" parent="1" source="10" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="40" value="содержит">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="203" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;exitX=0.18;exitY=1;exitDx=0;exitDy=0;entryX=0.18;entryY=0;entryDx=0;entryDy=0;" target="60" value="предпросмотр">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="204" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="80" value="генерирует PNG">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="220" y="560" />
+              <mxPoint x="420" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="205" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="90" value="сохраняет запись">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="220" y="600" />
+              <mxPoint x="740" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="206" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="120" value="использует">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="220" y="640" />
+              <mxPoint x="1075" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="207" edge="1" parent="1" source="40" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="90" value="читает / удаляет">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="475" y="700" />
+              <mxPoint x="840" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="208" edge="1" parent="1" source="40" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="50" value="открывает">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="209" edge="1" parent="1" source="40" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="100" value="отображает">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="475" y="510" />
+              <mxPoint x="1070" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="210" edge="1" parent="1" source="50" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;fontSize=11;" target="100" value="имеет">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="211" edge="1" parent="1" source="80" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=11;" target="60" value="создаёт painter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="212" edge="1" parent="1" source="90" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;fontSize=11;" target="100" value="хранит">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="785" y="540" />
+              <mxPoint x="1070" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="213" edge="1" parent="1" source="120" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;fontSize=11;" target="130" value="содержит (x4)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
