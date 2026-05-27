@@ -141,7 +141,7 @@ cmake --build build --config Release
 
 ## 📹 Видео-демонстрация
 
-> Ссылка будет добавлена после публикации видео-отчёта
+[![Видео-отчёт](https://img.shields.io/badge/RUTUBE-Смотреть%20видео-red?style=for-the-badge&logo=youtube)](https://rutube.ru/video/3285f0baf91994fe70257126a6dc2325/?r=wd)
 
 ---
 
