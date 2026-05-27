@@ -1,16 +1,154 @@
-# gift_cert_mobile
+# 🎁 Генератор подарочных сертификатов
 
-A new Flutter project.
+> АРМ специалиста салона красоты — программа для быстрого создания персонализированных подарочных сертификатов
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 📋 О проекте
 
-A few resources to get you started if this is your first Flutter project:
+Программа автоматизирует рабочий процесс администратора салона красоты: сотрудник вводит имя клиента, указывает сумму сертификата и выбирает сезонное оформление — программа мгновенно генерирует готовый PNG-файл высокого разрешения (4096×2304 px), который можно распечатать или отправить клиенту.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Проект реализован в **двух версиях**:
+- 🖥️ **Десктопная** — язык C++, фреймворк Qt6, платформа Windows
+- 📱 **Мобильная** — язык Dart, фреймворк Flutter, платформа Android
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## ✨ Возможности
+
+- 📝 Ввод имени клиента и суммы сертификата
+- 🌿 Четыре сезонных шаблона оформления: лето, осень, зима, весна
+- 👁️ Живой предпросмотр сертификата в реальном времени *(мобильная версия)*
+- 🖼️ Генерация PNG-сертификата высокого разрешения
+- 💾 Сохранение в галерею и отправка через мессенджер *(мобильная версия)*
+- 📊 История всех созданных сертификатов с хранением в SQLite
+- 🗑️ Просмотр и удаление записей из истории
+
+---
+
+## 🎨 Дизайн сертификата
+
+Сертификат формируется **программно** — весь текст и элементы рисуются кодом на Canvas, что обеспечивает одинаковый результат на любом устройстве.
+
+**Шрифты:**
+| Элемент | Шрифт |
+|---------|-------|
+| Заголовок «Подарочный сертификат» | Playfair Display |
+| Имя клиента | Great Vibes |
+| Сумма и вспомогательный текст | Montserrat |
+
+**Цветовая палитра:** тёплые кофейно-золотые тона `#2C1A0E` / `#C8A97E`
+
+---
+
+## 🏗️ Архитектура
+
+### Мобильная версия (Flutter)
+
+![UML диаграмма Flutter](docs/uml_class_diagram_light.png)
+
+### Десктопная версия (Qt / C++)
+
+![UML диаграмма Qt](docs/uml_class_diagram_desktop.drawio.png)
+
+---
+
+## 🛠️ Технологии
+
+### Мобильная версия
+| Технология | Назначение |
+|-----------|-----------|
+| Flutter / Dart | Основной фреймворк и язык |
+| `sqflite` | Локальная база данных SQLite |
+| `path_provider` | Работа с файловой системой |
+| `gal` | Сохранение изображений в галерею |
+| `share_plus` | Отправка файлов через мессенджер |
+| `intl` | Форматирование дат и чисел |
+
+### Десктопная версия
+| Технология | Назначение |
+|-----------|-----------|
+| C++17 | Язык программирования |
+| Qt6 Widgets | Графический интерфейс |
+| Qt6 SQL | Работа с базой данных |
+| SQLite | Локальное хранение истории |
+| CMake | Система сборки |
+
+---
+
+## 📁 Структура проекта
+
+```
+├── lib/
+│   ├── main.dart                    # Точка входа
+│   ├── models/
+│   │   └── certificate_record.dart  # Модель данных записи
+│   ├── screens/
+│   │   ├── generator_screen.dart    # Экран генерации
+│   │   ├── history_screen.dart      # Экран истории
+│   │   └── preview_page.dart        # Просмотр сертификата
+│   ├── services/
+│   │   ├── certificate_generator.dart  # Генерация PNG
+│   │   └── database_service.dart       # Работа с SQLite
+│   └── widgets/
+│       └── season_chip.dart         # Виджет выбора сезона
+├── assets/
+│   ├── certificate_template_summer.png
+│   ├── certificate_template_autumn.png
+│   ├── certificate_template_winter.png
+│   └── certificate_template_spring.png
+├── fonts/
+│   ├── PlayfairDisplay-Regular.ttf
+│   ├── GreatVibes-Regular.ttf
+│   └── Montserrat-Regular.ttf
+└── docs/
+    ├── uml_class_diagram_light.png
+    ├── uml_class_diagram_dark.png
+    └── uml_class_diagram_desktop.drawio.png
+```
+
+---
+
+## 🚀 Сборка и запуск
+
+### Мобильная версия (Android)
+
+```bash
+# Установить зависимости
+flutter pub get
+
+# Запустить на подключённом устройстве
+flutter run
+
+# Собрать APK
+flutter build apk --release
+```
+
+### Десктопная версия (Windows)
+
+```powershell
+# Настроить проект
+cmake -S . -B build
+
+# Собрать
+cmake --build build --config Release
+
+# Запустить
+.\build\Release\GiftCertificateGenerator.exe
+```
+
+---
+
+## 📹 Видео-демонстрация
+
+> Ссылка будет добавлена после публикации видео-отчёта
+
+---
+
+## 📄 Документация
+
+- [UML-диаграмма Flutter (светлая)](docs/uml_class_diagram_light.png)
+- [UML-диаграмма Flutter (тёмная)](docs/uml_class_diagram_dark.png)
+- [UML-диаграмма Qt/C++](docs/uml_class_diagram_desktop.drawio.png)
+- [Исходник диаграммы Flutter (.drawio)](uml_class_diagram.drawio)
+- [Исходник диаграммы Qt (.drawio)](uml_class_diagram_desktop.drawio)
