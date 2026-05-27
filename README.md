@@ -134,6 +134,22 @@ cmake --build build --config Release
 
 ---
 
+## IDEF0 диаграмма
+
+### A0 - Общая функция
+
+![IDEF0 A0](docs/idef0_a0.png)
+
+### A0 - Декомпозиция
+
+![IDEF0 A0 Декомпозиция](docs/idef0_decomp.png)
+
+### A3 - Декомпозиция
+
+![IDEF0 A3 Декомпозиция](docs/idef0_a3.png)
+
+---
+
 ## Документация
 
 - [UML-диаграмма Flutter (светлая)](docs/uml_class_diagram_light.png)
@@ -141,3 +157,4 @@ cmake --build build --config Release
 - [UML-диаграмма Qt/C++](docs/uml_class_diagram_desktop.drawio.png)
 - [Исходник диаграммы Flutter (.drawio)](uml_class_diagram.drawio)
 - [Исходник диаграммы Qt (.drawio)](uml_class_diagram_desktop.drawio)
+- [Исходник IDEF0 диаграммы (.drawio)](docs/idef0.drawio)
